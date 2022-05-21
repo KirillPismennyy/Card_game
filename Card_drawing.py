@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from tkinter import *
+from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageTk
 from enum import Enum
 import random
 from gradient import linear_gradient
@@ -308,5 +309,30 @@ def populate_card(card):
 #pikachu = Card("example.ini")
 pikachu = Card()
 pikachu.write_config()
+root = Tk()
+root.geometry('1000x1000')
+canvas = Canvas(root, width=999, height=999)
+canvas.pack()
+
 populate_card(pikachu)
+
+pilImage = Image.open("card_from_python.jpg")
+pilImage = pilImage.resize((732//3,1032//3), Image.ANTIALIAS)
+image = ImageTk.PhotoImage(pilImage)
+#imagesprite = canvas.create_image(500,200,image=image)
+def spawnImage():
+    canvas.create_image(500, 700, image=image)
+def attack():
+    pikachu.HP= int(pikachu.HP) - 30 #right now the info gets taken from .ini, needs to take from the object instead
+    populate_card(pikachu)
+    pilImage = Image.open("card_from_python.jpg")
+    pilImage = pilImage.resize((732 // 3, 1032 // 3), Image.ANTIALIAS)
+    image = ImageTk.PhotoImage(pilImage)
+    canvas.create_image(500, 700, image=image)
+#root.after(1000, spawnImage(canvas, image))
+btn = Button(root, text="Place card", command=spawnImage)
+btn.place(x=500,y=970)
+btn = Button(root, text="attack", command=attack)
+btn.place(x=500,y=70)
+root.mainloop()
 
